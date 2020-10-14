@@ -10,15 +10,16 @@ int password()
     char pass[15]={0};                          // For taking i/p (password) from User for verification Purpose.
     char check[15]={0};                         // For fetching Original Password From the password File Store in the Disk.
     char ch;
-    
+    int j=0,i=0;
+
     printf("PLEASE! ENTER THE PASSWORD\n");
     printf("ONLY 3 CHANCES WILL BE GIVEN\n");
-    
-    for(int i=0;i<=2;i++)                       // Loop Run 3 Times(Maximum).
+
+    for(i=0;i<=2;i++)                       // Loop Run 3 Times(Maximum).
     {
-        int j=0;
+        j=0;
         printf("\n\n\nEnter the Password->");
-        
+
         pass[0]=getch();                        // Main purpose is to Check, There is no Carriage Return (Enter) will be given by the user.
         while(pass[j]!='\r')                    // Checking Carriage Return.
         {
@@ -38,7 +39,7 @@ int password()
             }
         }
         pass[j]='\0';                           // Adding NULL at the Last helps to Check Termination point of the CHARACTER ARRAY i.e. (String).
-        
+
         FILE *fp;                               // file pointer to the password file.
         fp = fopen("password","r");             // Opening in the Read Mode.
         if(fp==NULL)                            // Checking the presence of password File.
@@ -55,7 +56,7 @@ int password()
                 ch=fgetc(fp);                   // Taking i/p Character by Character.
                 if(ch==EOF)
                 {
-                    check[i]='\0';              // Adding NULL at the Last helps to Check Termination point of the CHARACTER ARRAY i.e. (String).
+                    check[j]='\0';              // Adding NULL at the Last helps to Check Termination point of the CHARACTER ARRAY i.e. (String).
                     break;
                 }
                 check[j]=ch-5;                  // Decrypting Technique.
@@ -84,16 +85,17 @@ int password()
 void edit_password()
 {
     system("cls");                                                 // Clear the Screen.
-    
-    char pass[15]={0}, check[15]={0};
-    int match;
-    
-    printf("\n\n");    
+
+    char pass[15]={0}, verify[15]={0};
+    char ch;
+    int match,i=0,choice;
+
+    printf("\n\n");
     FILE *fp;                                                       // File Pointer to password file
     fp=fopen("password","rb");                                      // Read Binary Mode
     if(fp==NULL)
     {
-        fp=fopen("password","wb"); 
+        fp=fopen("password","wb");
         if(fp==NULL)                                                // Write Binary Mode
         {
             printf("SYSTEM ISSUE -_-");
@@ -101,7 +103,7 @@ void edit_password()
             return ;
         }
         fclose(fp);
-        printf("\nYOUR PASSWORD IS 'ENTER'\n PRESS ENTER TO CHANGE PASSWORD\n\n");   
+        printf("\nYOUR PASSWORD IS 'ENTER'\n PRESS ENTER TO CHANGE PASSWORD\n\n");
         getch();
     }
     fclose(fp);
@@ -116,74 +118,109 @@ void edit_password()
         {
             printf("Enter the NEW password -> ");
             fflush(stdin);
+            pass[0]=getch();
+            while(pass[i]!='\r')
+            {
+                if(pass[i]=='\b')
+                {
+                    i--;
+                    printf("\b");
+                    printf(" ");
+                    printf("\b");
+                    pass[i]=getch();
+                }
+                else
+                {
+                    printf("*");
+                    i++;
+                    pass[i]=getch();
+                }
+            }
+            pass[i]='\0';
+            i=0;
+            printf("\nConfirm Password");
+            verify[0]=getch();
+            while(verify[i]!='\r')
+            {
+                if(verify[i]=='\b')
+                {
+                    i--;
+                    printf("\b");
+                    printf(" ");
+                    printf("\b");
+                    verify[i]=getch();
+                }
+                else
+                {
+                    printf("*");
+                    i++;
+                    verify[i]=getch();
+                }
+            }
+            verify[i]='\0';
+            if(strcmp(pass,verify)==0)
+            {
+                fp=fopen("password","wb");
+                if(fp==NULL)
+                {
+                    printf("SYSTEM ERROR -_-");
+                    getch();
+                    return;
+                }
+                i=0;
+                while(pass[i]!='\0')
+                {
+                    ch=pass[i];
+                    putc(ch+5,fp);
+                    i++;
+                }
+                putc(EOF,fp);
+                fclose(fp);
+            }
+            else
+            {
+                printf("WRONG PASSWORD");
+                choice=1;
+            }
         }
     }
+    while(choice==1);
+    printf("\n\t\tPassword Changed");
+    getch();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 int main()
 {
     int option;
-    printf("\n\n\t\t\t#############################################################");                                                                      // For Design Purpose Only.
-    printf("\n\t\t\t#\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t#\n\t\t\t# \t\t\t   PASSWORD PROTECTED PERSONAL DIARY\t\t\t#");
-    printf("\n\t\t\t#\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t#\n\t\t\t# \t\t\t\t       (ALEX_SALONI_SUNNY) \t\t\t\t\t#\n\t\t\t#\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t#\n");
-    printf("\t\t\t#############################################################");
-    
-    
+    printf("\n\n\t\t\t#########################################################");                                                                      // For Design Purpose Only.
+    printf("\n\t\t\t#\t\t\t\t\t\t\t#\n\t\t\t# \t   PASSWORD PROTECTED PERSONAL DIARY\t\t#");
+    printf("\n\t\t\t#\t\t\t\t\t\t\t#\t\t\t\t\t\t\t# \t       (ALEX_SALONI_SUNNY) \t\t\t#\n\t\t\t#\t\t\t\t\t\t\t#\n");
+    printf("\t\t\t#########################################################");
+
+
     while(1)
     {
-        printf("\n\n\n\t\t\t{ MAIN MENU }\t { OPTION }");
-        printf("\n\n\t\t\tADD RECORD\t\t\t[1]");
-        printf("\n\t\t\tVIEW RECORD\t\t\t[2]");
+        printf("\n\n\n\t\t\t{ MAIN MENU }\t    { OPTIONS }");
+        printf("\n\n\t\t\tADD RECORD\t\t[1]");
+        printf("\n\t\t\tVIEW RECORD\t\t[2]");
         printf("\n\t\t\tDELETE RECORD\t\t[3]");
         printf("\n\t\t\tEDIT PASSWORD\t\t[4]");
-        printf("\n\t\t\tEXIT\t\t\t\t[5]");
+        printf("\n\t\t\tEXIT\t\t\t[5]");
         printf("\n\n\t\t\tPlease! Enter the Option :");
         scanf("%d",&option);
-        
+
         switch(option)
         {
             case 1:
-                add_record();
-                break; 
+//                add_record();
+                break;
             case 2:
-                view_record();
+   //             view_record();
                 break;
             case 3:
-                delete_record();
+     //           delete_record();
                 break;
             case 4:
                 edit_password();

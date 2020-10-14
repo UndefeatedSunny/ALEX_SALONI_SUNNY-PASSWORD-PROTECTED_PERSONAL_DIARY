@@ -8,7 +8,7 @@
 int password()
 {
     char pass[15]={0};                          // For taking i/p (password) from User for verification Purpose.
-    char check[15]={0};                         // For fetching Original Password From the Binary File Store in the Disk.
+    char check[15]={0};                         // For fetching Original Password From the password File Store in the Disk.
     char ch;
     
     printf("PLEASE! ENTER THE PASSWORD\n");
@@ -32,16 +32,16 @@ int password()
             }
             else
             {
-                printf("*");                    // Shows like that we Enter Password on the Screen in the HIDDEN i.e (*) Format.
+                printf("*");                    // Shows like that we Enter Password on the Screen in the HIDDEN format i.e (*) Format.
                 j++;
                 pass[j]=getch();                // Storing Pasword from User Side For Comparision Purpose.
             }
         }
-        pass[j]='\0';                           // Adding NULL at the Last helps to Check Termination point of the Array Input i.e. (String).
+        pass[j]='\0';                           // Adding NULL at the Last helps to Check Termination point of the CHARACTER ARRAY i.e. (String).
         
-        FILE *fp;                          // file pointer to the password file.
-        fp = fopen("password","r");
-        if(fp==NULL)
+        FILE *fp;                               // file pointer to the password file.
+        fp = fopen("password","r");             // Opening in the Read Mode.
+        if(fp==NULL)                            // Checking the presence of password File.
         {
             printf("[FILE MISSING]");
             getch();
@@ -52,52 +52,31 @@ int password()
             j=0;
             while(1)
             {
-                ch=fgetc(fp);
+                ch=fgetc(fp);                   // Taking i/p Character by Character.
                 if(ch==EOF)
                 {
-                    check[i]='\0';         // Make Null character at the last to convert into string
+                    check[i]='\0';              // Adding NULL at the Last helps to Check Termination point of the CHARACTER ARRAY i.e. (String).
                     break;
                 }
-                check[j]=ch-5;
+                check[j]=ch-5;                  // Decrypting Technique.
                 j++;
             }
-            if(strcmp(pass,check)==0)
-            {
-                printf("ACCESS GRANTED \n");
-                return 0;
-            }
-            else
-            {
-                printf("WRONG PASSWORD \n");
-            }
         }
-        fclose(fp);
+        if(strcmp(pass,check)==0)           // Compare the User Password with Original Password.
+        {
+            printf("ACCESS GRANTED \n");
+            return 0;
+        }
+        else
+        {
+            printf("WRONG PASSWORD \n");
+        }
+        fclose(fp);                             // Close the password file.
     }
     printf("YOU ARE NOT ALLOWED TO ENTER");
     getch();
     return 1;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

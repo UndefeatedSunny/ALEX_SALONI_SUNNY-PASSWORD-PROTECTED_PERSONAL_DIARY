@@ -18,7 +18,7 @@ int password()
     for(i=0;i<=2;i++)                       // Loop Run 3 Times(Maximum).
     {
         j=0;
-        printf("\n\n\nEnter the Password->");
+        printf("\n\n\nEnter the Password-> ");
 
         pass[0]=getch();                        // Main purpose is to Check, There is no Carriage Return (Enter) will be given by the user.
         while(pass[j]!='\r')                    // Checking Carriage Return.
@@ -44,7 +44,7 @@ int password()
         fp = fopen("password","r");             // Opening in the Read Mode.
         if(fp==NULL)                            // Checking the presence of password File.
         {
-            printf("[FILE MISSING]");
+            printf(" [FILE MISSING]");
             getch();
             return 1;
         }
@@ -65,12 +65,12 @@ int password()
         }
         if(strcmp(pass,check)==0)           // Compare the User Password with Original Password.
         {
-            printf("ACCESS GRANTED \n");
+            printf("\n\t\t\tACCESS GRANTED \n");
             return 0;
         }
         else
         {
-            printf("WRONG PASSWORD \n");
+            printf("\n\t\t\tWRONG PASSWORD \n");
         }
         fclose(fp);                             // Close the password file.
     }
@@ -78,9 +78,6 @@ int password()
     getch();
     return 1;
 }
-
-
-
 
 void edit_password()
 {
@@ -116,7 +113,7 @@ void edit_password()
     {
         if(match==0)
         {
-            printf("Enter the NEW password -> ");
+            printf("\nEnter the NEW password -> ");
             fflush(stdin);
             pass[0]=getch();
             while(pass[i]!='\r')
@@ -138,7 +135,7 @@ void edit_password()
             }
             pass[i]='\0';
             i=0;
-            printf("\nConfirm Password");
+            printf("\nConfirm Password -> ");
             verify[0]=getch();
             while(verify[i]!='\r')
             {
@@ -179,17 +176,15 @@ void edit_password()
             }
             else
             {
-                printf("WRONG PASSWORD");
+                printf("\nWRONG PASSWORD");
                 choice=1;
             }
         }
     }
     while(choice==1);
-    printf("\n\t\tPassword Changed");
+    printf("\n\n\t\tPassword Changed");
     getch();
 }
-
-
 
 int main()
 {

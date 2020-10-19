@@ -93,19 +93,19 @@ int password()
 
 void edit_password()
 {
-    system("cls");                               // Clear the Screen.
+    system("cls");
 
     char pass[15]={0}, verify[15]={0};
     char ch;
     int match,i=0,choice;
 
     printf("\n\n");
-    FILE *fp;                                    // File Pointer to password file.
-    fp=fopen("password","rb");                   // Read Binary Mode
+    FILE *fp;                                                       // File Pointer to password file.
+    fp=fopen("password","rb");                                      // Read Binary Mode
     if(fp==NULL)
     {
         fp=fopen("password","wb");
-        if(fp==NULL)                             // Write Binary Mode
+        if(fp==NULL)                                                // Write Binary Mode
         {
             printf("SYSTEM ISSUE -_-");
             getch();
@@ -116,7 +116,7 @@ void edit_password()
         getch();
     }
     fclose(fp);
-    match=password();
+    match=password();                                               // PROCESS is SAME as PASSWORD , instead only we take confirmation Step in the end to rewrite the PASSWORD (Verification Purpose).
     if(match==1)
     {
         return;
@@ -125,7 +125,7 @@ void edit_password()
     {
         if(match==0)
         {
-            printf("\nEnter the NEW password -> ");
+            printf("\nEnter the NEW password -> ");                 // If matches ENTER the NEW PASSWORD.
             fflush(stdin);
             pass[0]=getch();
             while(pass[i]!='\r')
@@ -166,7 +166,7 @@ void edit_password()
                     verify[i]=getch();
                 }
             }
-            verify[i]='\0';
+            verify[i]='\0';                                         // ADDing NULL Character in the END.
             if(strcmp(pass,verify)==0)
             {
                 fp=fopen("password","wb");
@@ -194,7 +194,7 @@ void edit_password()
         }
     }
     while(choice==1);
-    printf("\n\n\t\tPassword Changed");
+    printf("\n\n\t\tPassword Changed (-_-)");
     getch();
 }
 
@@ -217,10 +217,10 @@ void add_record()
     printf("\n\n\t\tENTER DATE OF YOUR RECORD:[yyyy-mm-dd]: ");
     fflush(stdin);
     gets(date);
-    fp=fopen(date,"ab+");                   // Append Data + ((Read + Write) Permissions), only if file is present.
-    if(fp==NULL)                            // Means File is NOT Present.
+    fp=fopen(date,"ab+");                                           // Append Data + ((Read + Write) Permissions), only if file is present.
+    if(fp==NULL)                                                    // Means File is NOT Present.
     {
-        fp=fopen(date,"wb+");               // Creation of FILE if not present on that DATE.
+        fp=fopen(date,"wb+");                                       // Creation of FILE if not present on that DATE.
         if(fp==NULL)
         {
             printf("\nSYSTEM ERROR -_-");
@@ -233,12 +233,12 @@ void add_record()
     {
         choice=0;
         fflush(stdin);
-        printf("\n\t\tENTER TIME:[hh:mm]: ");    //Whether Note already Exists or not (Based on Time).
+        printf("\n\t\tENTER TIME:[hh:mm]: ");
         scanf("%s",time);
-        rewind(fp);                          // Back pointer to the Initial Position For READ Data.
+        rewind(fp);                                                 // Back pointer to the Initial Position For READ Data.
         while(fread(&add,sizeof(add),1,fp)==1)
         {
-            if(strcmp(add.time,time)==0)
+            if(strcmp(add.time,time)==0)                            // Whether Note already Exists or not ? (Based on Time).
             {
                 printf("\n Already Exists");
                 choice=1;
@@ -246,7 +246,7 @@ void add_record()
         }
         if(choice==0)
         {
-            strcpy(add.time,time);
+            strcpy(add.time,time);                                  // Taking Input from user for all fields like Date, Day, Time, Note.
             printf("\n\t\tEnter the Date: ");
             fflush(stdin);
             gets(add.date);
@@ -261,7 +261,7 @@ void add_record()
         }
         printf("\n\t ADD another NOTE .... (Y/N) ");
         fflush(stdin);
-        enter=getch();                       // Checking whether user wanted another note on same day.
+        enter=getch();                                              // Checking whether user wanted another note on same day.
     }
     fclose(fp);
     printf("Enter any KEY to Exit");
@@ -288,14 +288,14 @@ void view_record()
         return;
     }
 
-    do  // RUN 1 time minimum (Thats what we need for Verification Purpose).
+    do                                                                              // RUN 1 time minimum (Thats what we need for Verification Purpose).
     {
         printf("\n\t\tENTER THE DATE OF RECORD TO BE VIEWED:[yyyy-mm-dd]: ");
         fflush(stdin);
         gets(date_verif);
 
         fp=fopen(date_verif,"rb");
-        if(fp==NULL)                            // Checking Whether Record is Present or NOT.
+        if(fp==NULL)                                                                // Checking Whether Record is Present or NOT.
         {
             printf("THE RECORD NOT EXISTS -_-\nPlease Enter any KEY to EXIT\n");
             getch();
@@ -308,10 +308,10 @@ void view_record()
         printf("\n\n\tPLEASE ENTER YOUR CHOICE: ");
         scanf("%d",&option);
 
-        switch(option)
+        switch(option)                                                              // Whether the user wanted the Whole Day Record or Particular Time.
         {
             case 1:
-                printf("\n\tRECORD OF WHOLE DAY [%s] IS -->> \n",date_verif);
+                printf("\n\tRECORD OF WHOLE DAY [%s] IS -->> \n",date_verif);       // WHOLE DAY RECORD.
                 while(fread(&owner,sizeof(owner),1,fp)==1)
                 {
                     printf("\nDATE : %s",owner.date);
@@ -322,7 +322,7 @@ void view_record()
                 }
                 break;
 
-            case 2:
+            case 2:                                                                 // PARTICULAR TIME RECORD.
                 fflush(stdin);
                 printf("\nENTER TIME:[hh:mm]:");
                 gets(time);
@@ -360,7 +360,7 @@ void delete_record()
 {
     system("cls");
     FILE *fp;
-    FILE *fptemp;                                        // Copying Purpose of Data.
+    FILE *fptemp;
     struct record info;
     char date[15],time[15],another='Y';
     int option;
@@ -372,7 +372,7 @@ void delete_record()
         return;
     }
 
-    while(another=='Y' || another=='y')
+    while(another=='Y' || another=='y')                                                 // Continious Asking from user, wanted another record to delete or not.
     {
         printf("\n\n\tPLEASE SELECT ANY METHOD FOR DELETION.");
         printf("\n\n\t{1} DELETE WHOLE RECORD\t\t\t[1]");
@@ -380,7 +380,7 @@ void delete_record()
 
         do
         {
-            printf("\n \t\t\t\t\t\tENTER THE OPTION : ");
+            printf("\n \t\t\t\t\t\tENTER THE OPTION : ");                               // Providing 2 Options whether he want to delete whole Day record or Particular Timing.
             scanf("%d",&option);
 
             switch(option)
@@ -390,7 +390,7 @@ void delete_record()
                     fflush(stdin);
                     gets(date);
                     fp=fopen(date,"wb");
-                    if(fp==NULL)
+                    if(fp==NULL)                                                        // Is fine present or not , if not create it.
                     {
                         printf("\n\t\t\tFILE NOT EXISTS");
                         printf("ENTER ANY KEY TO EXIT");
@@ -398,7 +398,7 @@ void delete_record()
                         return;
                     }
                     fclose(fp);
-                    remove(date);
+                    remove(date);                                                       // Remove/Delete the file from the System.
                     printf("\n\t\t\t\t\tFILE DELETED SUCCESSFULLY.... (-_-)\n");
                     break;
 
@@ -407,7 +407,7 @@ void delete_record()
                     fflush(stdin);
                     gets(date);
                     fp=fopen(date,"rb");
-                    if(fp==NULL)
+                    if(fp==NULL)                                                        // Is fine present or not ?
                     {
                         printf("\n\t\t\tFILE NOT EXISTS");
                         printf("ENTER ANY KEY TO EXIT");
@@ -415,7 +415,7 @@ void delete_record()
                         return;
                     }
 
-                    fptemp=fopen("temp","wb");
+                    fptemp=fopen("temp","wb");                                          // Temporary File Creation, for copying data from the original file, wat we need not to delete.
                     if(fptemp==NULL)
                     {
                         printf("\n\t\t\tSYSTEM ERROR (-_-)");
@@ -432,13 +432,13 @@ void delete_record()
                     {
                         if(strcmp(time,info.time)!=0)
                         {
-                            fwrite(&info,sizeof(info),1,fptemp);
+                            fwrite(&info,sizeof(info),1,fptemp);                        // Copy data from the original file to the Temporary File.
                         }
                     }
                     fclose(fptemp);
                     fclose(fp);
                     remove(date);
-                    rename("temp",date);
+                    rename("temp",date);                                                // Rename the Temporary file to Original file and Delete the original File.
                     printf("\n\t\t\t\tFILE DELETED SUCCESSFULLY.... (-_-)");
                     break;
 
@@ -479,19 +479,19 @@ int main()
         switch(option)
         {
             case 1:
-                add_record();
+                add_record();                                                       // Add Record in the Diary.
                 break;
             case 2:
-                view_record();
+                view_record();                                                      // View the Record (Based on Day and Timing).
                 break;
             case 3:
-                delete_record();
+                delete_record();                                                    // Delete the Record (Based on Day and Timing).
                 break;
             case 4:
-                edit_password();
+                edit_password();                                                    // PASSWORD Change.
                 break;
             case 5:
-                printf("\n\t\t\tTHANK YOU\t [-_-]\n");
+                printf("\n\t\t\tTHANK YOU\t [-_-]\n");                              // Closing the application.
                 getch();
                 return 0;
                 break;

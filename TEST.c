@@ -14,7 +14,6 @@ struct record                                   // Declare a Structure used to s
 };
 
 
-
 int password()
 {
     char pass[15]={0};                          // For taking i/p (password) from User for verification Purpose.
@@ -94,19 +93,19 @@ int password()
 
 void edit_password()
 {
-    system("cls");                                                 // Clear the Screen.
+    system("cls");                               // Clear the Screen.
 
     char pass[15]={0}, verify[15]={0};
     char ch;
     int match,i=0,choice;
 
     printf("\n\n");
-    FILE *fp;                                                       // File Pointer to password file.
-    fp=fopen("password","rb");                                      // Read Binary Mode
+    FILE *fp;                                    // File Pointer to password file.
+    fp=fopen("password","rb");                   // Read Binary Mode
     if(fp==NULL)
     {
         fp=fopen("password","wb");
-        if(fp==NULL)                                                // Write Binary Mode
+        if(fp==NULL)                             // Write Binary Mode
         {
             printf("SYSTEM ISSUE -_-");
             getch();
@@ -312,13 +311,13 @@ void view_record()
         switch(option)
         {
             case 1:
-                printf("\n\t\tRECORD OF WHOLE DAY [%s] IS -->> \n",date_verif);
+                printf("\n\tRECORD OF WHOLE DAY [%s] IS -->> \n",date_verif);
                 while(fread(&owner,sizeof(owner),1,fp)==1)
                 {
-                    printf("\nDATE : \n\t%s",owner.date);
-                    printf("\nTIME : \n\t%s",owner.time);
-                    printf("\nDAY : \n\t%s",owner.day);
-                    printf("\nNOTE : \n\t%s",owner.note);
+                    printf("\nDATE : %s",owner.date);
+                    printf("\nTIME : %s",owner.time);
+                    printf("\nDAY  : %s",owner.day);
+                    printf("\nNOTE : %s",owner.note);
                     printf("\n");
                 }
                 break;
@@ -332,10 +331,10 @@ void view_record()
                     if(strcmp(time,owner.time)==0)
                     {
                         printf("\nHERE IS YOUR RECORD SIR (-_-)");
-                        printf("\n\nDATE : \n\t%s",owner.date);
-                        printf("\nTIME : \n\t%s",owner.time);
-                        printf("\nDAY : \n\t%s",owner.day);
-                        printf("\nNOTE : \n\t%s",owner.note);
+                        printf("\nDATE : %s",owner.date);
+                        printf("\nTIME : %s",owner.time);
+                        printf("\nDAY  : %s",owner.day);
+                        printf("\nNOTE : %s",owner.note);
                         printf("\n");
                     }
                 }
@@ -357,14 +356,114 @@ void view_record()
 }
 
 
+void delete_record()
+{
+    system("cls");
+    FILE *fp;
+    FILE *fptemp;                                        // Copying Purpose of Data.
+    struct record info;
+    char date[15],time[15],another='Y';
+    int option;
+    printf("\n\n\t\t\t*************************\n");
+    printf("\t\t\t* WELCOME TO DELETE MENU*");
+    printf("\n\t\t\t*************************\n\n");
+    if(password()!=0)
+    {
+        return;
+    }
+
+    while(another=='Y' || another=='y')
+    {
+        printf("\n\n\tPLEASE SELECT ANY METHOD FOR DELETION.");
+        printf("\n\n\t{1} DELETE WHOLE RECORD\t\t\t[1]");
+        printf("\n\n\t{2} DELETE A PARTICULAR RECORD BY TIME\t[2]");
+
+        do
+        {
+            printf("\n \t\t\t\t\t\tENTER THE OPTION : ");
+            scanf("%d",&option);
+
+            switch(option)
+            {
+                case 1:
+                    printf("\n\t\t\t\t\t\tENTER THE DATE OF RECORD TO BE DELETED [yyyy-mm-dd] : ");
+                    fflush(stdin);
+                    gets(date);
+                    fp=fopen(date,"wb");
+                    if(fp==NULL)
+                    {
+                        printf("\n\t\t\tFILE NOT EXISTS");
+                        printf("ENTER ANY KEY TO EXIT");
+                        getch();
+                        return;
+                    }
+                    fclose(fp);
+                    remove(date);
+                    printf("\n\t\t\t\t\tFILE DELETED SUCCESSFULLY.... (-_-)\n");
+                    break;
+
+                case 2:
+                    printf("\n\t\t\t\t\t\tENTER THE DATE OF RECORD TO BE DELETED [yyyy-mm-dd] : ");
+                    fflush(stdin);
+                    gets(date);
+                    fp=fopen(date,"rb");
+                    if(fp==NULL)
+                    {
+                        printf("\n\t\t\tFILE NOT EXISTS");
+                        printf("ENTER ANY KEY TO EXIT");
+                        getch();
+                        return;
+                    }
+
+                    fptemp=fopen("temp","wb");
+                    if(fptemp==NULL)
+                    {
+                        printf("\n\t\t\tSYSTEM ERROR (-_-)");
+                        printf("ENTER ANY KEY TO EXIT");
+                        getch();
+                        return;
+                    }
+
+                    printf("\n\t\t\t\t\t\tENTER THE TIME OF RECORD TO BE DELETED:[hh:mm]:");
+                    fflush(stdin);
+                    gets(time);
+
+                    while(fread(&info,sizeof(info),1,fp)==1)
+                    {
+                        if(strcmp(time,info.time)!=0)
+                        {
+                            fwrite(&info,sizeof(info),1,fptemp);
+                        }
+                    }
+                    fclose(fptemp);
+                    fclose(fp);
+                    remove(date);
+                    rename("temp",date);
+                    printf("\n\t\t\t\tFILE DELETED SUCCESSFULLY.... (-_-)");
+                    break;
+
+                default:
+                    printf("\n\t\t\tPLEASE! ENTER THE CORRECT OPTION ");
+                    break;
+            }
+        }
+        while(option<1||option>2);
+
+        printf("\n\tDO YOU LIKE TO DELETE ANOTHER RECORD.(Y/N):");
+        fflush(stdin);
+        scanf("%c",&another);
+    }
+    printf("\n\n\tPRESS ANY KEY TO EXIT...");
+    getch();
+}
+
 int main()
 {
     int option;
-    printf("\n\n\t\t\t#########################################################");                                                                      // For Design Purpose Only.
+    printf("\n\n\t\t\t#########################################################");      // For Design Purpose Only.
     printf("\n\t\t\t#\t\t\t\t\t\t\t#\n\t\t\t# \t   PASSWORD PROTECTED PERSONAL DIARY\t\t#");
     printf("\n\t\t\t#\t\t\t\t\t\t\t#\t\t\t\t\t\t\t# \t       (ALEX_SALONI_SUNNY) \t\t\t#\n\t\t\t#\t\t\t\t\t\t\t#\n");
     printf("\t\t\t#########################################################");
-
 
     while(1)
     {
@@ -386,7 +485,7 @@ int main()
                 view_record();
                 break;
             case 3:
-     //           delete_record();
+                delete_record();
                 break;
             case 4:
                 edit_password();
